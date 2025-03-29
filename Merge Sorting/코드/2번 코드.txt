@@ -1,0 +1,115 @@
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdio.h>
+
+using namespace std;
+
+
+typedef struct Weather {
+	string date = " ";
+	int temperature = 0;
+} weather;
+
+
+
+void merge(Weather* weather, int first, int mid, int last)
+{
+
+	Weather* sortedWeathers = new Weather[last - first + 1];
+	int i, j, k;
+	i = first;
+	j = mid + 1;
+	k = 0;
+
+
+	while (i <= mid && j <= last)
+	{
+		if (weather[i].temperature <= weather[j].temperature)
+			sortedWeathers[k++] = weather[i++];
+		else
+			sortedWeathers[k++] = weather[j++];
+	}
+
+	if (i > mid)
+		while (j <= last)
+			sortedWeathers[k++] = weather[j++];
+
+	else
+		while (i <= mid)
+			sortedWeathers[k++] = weather[i++];
+
+	for (i = first, k = 0; i <= last; i++, k++)
+		weather[i] = sortedWeathers[k];
+
+
+
+
+	delete[] sortedWeathers;
+}
+
+void mergeSort(Weather* weather, int first, int last)
+{
+	if (first < last)
+	{
+		int mid = (first + last) / 2;
+
+		mergeSort(weather, first, mid);
+		mergeSort(weather, mid + 1, last);
+		merge(weather, first, mid, last);
+	}
+}
+
+void weatherFileWrite(Weather* weathers, int maxIndex) {
+	ofstream fout;
+
+	fout.open("sorted_daegu_weather_2024.txt");
+
+	for (int i = 0;i <= maxIndex;i++) {
+		fout << weathers[i].date << " " << weathers[i].temperature << endl;
+	}
+	fout.close();
+}
+
+
+int main(void)
+{
+
+	ifstream fin("daegu_weather_2024.txt");
+	int weatherCount = 0;
+
+	if (fin.is_open()) {
+		string s;
+		int t;
+		while (!fin.eof())
+		{
+			fin >> s >> t;
+			weatherCount++;
+		}
+
+
+		fin.clear();
+		fin.seekg(0, ios::beg);
+
+		Weather* weathers = new Weather[weatherCount];
+		for (int i = 0; i < weatherCount; i++) {
+			fin >> weathers[i].date >> weathers[i].temperature;
+		}
+
+		int maxIndex = weatherCount - 1;
+		mergeSort(weathers, 0, maxIndex);
+
+		weatherFileWrite(weathers, maxIndex);
+		cout << "2-1. 2024년도 날씨를 높은 순서대로 정렬하고 파일로 출력하였습니다.\n--------------\n" << endl;
+
+		cout << "2-2. 2024년도 가장 더웠던 3일 :\n" << "---------------" << endl;
+		cout << "날짜 : " << weathers[maxIndex].date << " | 기온 : " << weathers[maxIndex].temperature << endl;
+		cout << "날짜 : " << weathers[maxIndex - 1].date << " | 기온 : " << weathers[maxIndex - 1].temperature << endl;
+		cout << "날짜 : " << weathers[maxIndex - 2].date << " | 기온 : " << weathers[maxIndex - 2].temperature << endl;
+	}
+	else {
+		cout << "파일을 찾을 수 없습니다!" << endl;
+	}
+	return 0;
+}

@@ -1,0 +1,72 @@
+#include <iostream>
+
+using namespace std;
+
+
+void prinArr(int* arr, int arrLength)
+{
+	for (int i = 0; i < arrLength; i++) {
+		cout << arr[i] << " ";
+	}
+	printf("\n\n");
+}
+
+void merge(int* arr, int first, int mid, int last)
+{
+	int* sorted = new int[last - first + 1];
+	int i, j, k;
+	i = first;
+	j = mid + 1;
+	k = 0;
+
+
+	while (i <= mid && j <= last)
+	{
+		if (arr[i] <= arr[j])
+			sorted[k++] = arr[i++];
+		else
+			sorted[k++] = arr[j++];
+	}
+
+	if (i > mid)
+		while (j <= last)
+			sorted[k++] = arr[j++];
+	else
+		while (i <= mid)
+			sorted[k++] = arr[i++];
+
+	for (i = first, k = 0; i <= last; i++, k++)
+		arr[i] = sorted[k];
+
+
+
+	delete[] sorted;
+}
+
+void mergeSort(int* arr, int first, int last)
+{
+	if (first < last)
+	{
+		int mid = (first + last) / 2;
+
+		mergeSort(arr, first, mid);
+		mergeSort(arr, mid + 1, last);
+		merge(arr, first, mid, last);
+	}
+}
+
+
+int main(void)
+{
+	int arr[8] = { 37, 10, 22, 30, 35, 13, 25, 24 };
+	int arrLength = sizeof(arr) / sizeof(arr[0]);
+	int maxIndex = maxIndex = arrLength - 1;
+
+	printf("입력 : \n");
+	prinArr(arr, arrLength);
+
+	mergeSort(arr, 0, maxIndex);
+	printf("출력 : \n");
+	prinArr(arr, arrLength);
+	return 0;
+}
