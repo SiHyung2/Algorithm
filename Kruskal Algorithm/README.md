@@ -1,6 +1,6 @@
 
 
-## 번외.📌 연산자 오버로딩 & 객체참조 ##
+## 번외.📌 연산자 오버로딩 & 객체참조 & 랜덤숫자 함수(with. T) ##
 
 
 ### 💠연산자 오버로딩 ###
@@ -57,4 +57,17 @@ public:
 		return this->distance < edge.distance;
 	}
 };
+```
+
+
+### 💠랜덤숫자 ###
+
+```
+random_device rd;
+mt19937_64 rng(rd());
+template<typename T>
+T RandomNumber(T start, T end) {
+	uniform_int_distribution<T> dist(start, end);
+	return dist(rng);
+}
 ```
