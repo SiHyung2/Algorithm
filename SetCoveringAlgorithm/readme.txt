@@ -1,4 +1,4 @@
-## 📌 Set Covering Algorithm
+## 📌 Set Covering Algorithm 프로젝트 ##
 
 ---
 
